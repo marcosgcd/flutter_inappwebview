@@ -21,6 +21,17 @@ class MyInAppBrowser extends InAppBrowser {
           webViewEnvironment: webViewEnvironment,
         );
 
+  Future<void> closeBrowserAfterDelay() async {
+    print("TEST: Browser will close in 5 seconds!");
+    for (int i = 5; i > 0; i--) {
+      print("TEST: Closing in $i seconds...");
+      await Future.delayed(Duration(seconds: 1));
+    }
+    print("TEST: Closing browser! NOW");
+
+    close();
+  }
+
   @override
   void onBrowserCreated() {
     print("\n\nBrowser Created!\n\n");
@@ -32,6 +43,7 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   void onLoadStop(url) {
     pullToRefreshController?.endRefreshing();
+    closeBrowserAfterDelay();
   }
 
   @override
@@ -58,8 +70,7 @@ class MyInAppBrowser extends InAppBrowser {
   }
 
   @override
-  FutureOr<NavigationActionPolicy> shouldOverrideUrlLoading(
-      navigationAction) {
+  FutureOr<NavigationActionPolicy> shouldOverrideUrlLoading(navigationAction) {
     print("\n\nOverride ${navigationAction.request.url}\n\n");
     return NavigationActionPolicy.ALLOW;
   }
